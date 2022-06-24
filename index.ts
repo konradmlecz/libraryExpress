@@ -2,6 +2,7 @@ import * as express from "express";
 import "express-async-errors";
 import { urlencoded } from "express";
 import "./utils/db";
+const publisherRouter = require("./controlers/publisher.controler");
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(
     extended: true,
   })
 );
+
+app.use("/publisher", publisherRouter);
 
 app.use("/", (req, res) => {
   res.send("ok");
