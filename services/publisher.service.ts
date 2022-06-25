@@ -1,4 +1,5 @@
 import * as express from "express";
+import { PublisherValidator } from "../validator/publischer.validator";
 const { PublisherEntity } = require("../records/Publisher.record");
 
 exports.getAll = async function (req: express.Request, res: express.Response) {
@@ -14,6 +15,15 @@ exports.insertOne = async function (
   res: express.Response
 ) {
   const { name } = req.body;
+
+  const { validator } = new PublisherValidator(req.body);
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
   const publisherEntity = new PublisherEntity({ name: name });
   const id = await publisherEntity.insertOne();
   res.json({
