@@ -12,4 +12,11 @@ export class MainValidator {
         this.resultValidation.push(`Property ${key} is isNotBeEmpty`);
     }
   }
+  async objectMustBeExist(record: any, property: string, key: string) {
+    const [obj] = await record.getOne(property);
+    if (!obj) {
+      (this.error = true),
+        this.resultValidation.push(`Object with ${key} ${property} not exist`);
+    }
+  }
 }

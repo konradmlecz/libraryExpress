@@ -16,7 +16,7 @@ exports.insertOne = async function (
 ) {
   const { name } = req.body;
 
-  const { validator } = new PublisherValidator(req.body);
+  const { validator } = PublisherValidator.checkForInsertOne(req.body);
 
   if (validator.error) {
     return res.json({
@@ -34,7 +34,20 @@ exports.insertOne = async function (
 
 exports.getOne = async function (req: express.Request, res: express.Response) {
   const { id } = req.params;
+
+  const { validator } = await PublisherValidator.checkForGeteOne({
+    id: id,
+  });
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
   const [result] = await PublisherEntity.getOne(id);
+
   res.json({
     isSuccess: true,
     result: result,
@@ -47,6 +60,19 @@ exports.updateOne = async function (
 ) {
   const { id } = req.params;
   const { name } = req.body;
+
+  const { validator } = await PublisherValidator.checkForUbdateOne({
+    id: id,
+    name: name,
+  });
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
   const publisherEntity = new PublisherEntity({ name: name, id: id });
   const result = await publisherEntity.updateOne();
   res.json({
