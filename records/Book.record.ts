@@ -11,7 +11,7 @@ export class BookEntity {
   constructor({
     id,
     title,
-    description,
+    description = null,
     publischedAt,
     publisherId,
     isLend,

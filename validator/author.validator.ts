@@ -47,7 +47,12 @@ export class AuthorValidator {
   static async checkForUbdateOne(data: PropsUbdate) {
     const author = new this(data);
     author.validator.isNotBeEmpty(author.id, "id");
-    await author.validator.objectMustBeExist(AuthorEntity, author.id, "id");
+    await author.validator.objectMustBeExist(
+      AuthorEntity,
+      author.id,
+      "id",
+      "Author"
+    );
 
     author.validator.isNotBeEmpty(author.name, "name");
     author.validator.isNotBeEmpty(author.surname, "surname");
@@ -61,7 +66,8 @@ export class AuthorValidator {
     await publisher.validator.objectMustBeExist(
       AuthorEntity,
       publisher.id,
-      "id"
+      "id",
+      "Author"
     );
     return publisher;
   }

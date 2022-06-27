@@ -43,7 +43,8 @@ export class PublisherValidator {
     await publisher.validator.objectMustBeExist(
       PublisherEntity,
       publisher.id,
-      "id"
+      "id",
+      "Publisher"
     );
     publisher.validator.isNotBeEmpty(publisher.name, "name");
 
@@ -56,7 +57,8 @@ export class PublisherValidator {
     await publisher.validator.objectMustBeExist(
       PublisherEntity,
       publisher.id,
-      "id"
+      "id",
+      "Publisher"
     );
     return publisher;
   }

@@ -1,5 +1,7 @@
 import * as express from "express";
 const { BookEntity } = require("../records/Book.record");
+const { BookAuthorEntity } = require("../records/BookAuthor.record");
+const { BookValidator } = require("../validator/book.validator");
 
 exports.getAllBook = async function (
   req: express.Request,
@@ -16,19 +18,36 @@ exports.insertOneBook = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { title, description, isLend, publischedAt, publischedId } = req.body;
+  const { title, description, publischedAt, publisherId, authorId } = req.body;
+
+  const { validator } = await BookValidator.checkForInsertOne(req.body);
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
 
   const bookEntity = new BookEntity({
     title,
     description,
-    isLend,
     publischedAt,
-    publischedId,
+    publisherId,
+    isLend: 0,
   });
-  const id = await bookEntity.insertOne();
+  const bookId = await bookEntity.insertOne();
+
+  const bookAuthorEntity = new BookAuthorEntity({
+    authorId,
+    bookId,
+  });
+
+  await bookAuthorEntity.insertOne();
+
   res.json({
     isSuccess: true,
-    id: id,
+    id: bookId,
   });
 };
 

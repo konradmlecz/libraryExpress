@@ -8,15 +8,28 @@ export class MainValidator {
 
   isNotBeEmpty(property: string, key: string) {
     if (!property) {
-      (this.error = true),
-        this.resultValidation.push(`Property ${key} is isNotBeEmpty`);
+      this.error = true;
+      this.resultValidation.push(`Property ${key} is Not Be Empty`);
     }
   }
-  async objectMustBeExist(record: any, property: string, key: string) {
+
+  isNotNumber(property: number, key: string) {
+    if (isNaN(property) || property === 0) {
+      this.error = true;
+      this.resultValidation.push(`Property ${key} is not Number`);
+    }
+  }
+
+  async objectMustBeExist(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
     const [obj] = await record.getOne(property);
     if (!obj) {
-      (this.error = true),
-        this.resultValidation.push(`Object with ${key} ${property} not exist`);
+      this.error = true;
+      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
     }
   }
 }
