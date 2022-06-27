@@ -57,6 +57,17 @@ exports.getOneBook = async function (
 ) {
   const { id } = req.params;
 
+  const { validator } = await BookValidator.checkForGeteOne({
+    id: id,
+  });
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
   const [result] = await BookEntity.getOne(id);
   res.json({
     isSuccess: true,

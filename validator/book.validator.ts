@@ -18,6 +18,10 @@ interface PropsInsert {
   authorId: string;
 }
 
+interface PropsGetOne {
+  id: string;
+}
+
 export class BookValidator {
   id?: string;
   title?: string;
@@ -58,6 +62,13 @@ export class BookValidator {
       "id",
       "Publisher"
     );
+    return book;
+  }
+
+  static async checkForGeteOne(data: PropsGetOne) {
+    const book = new this(data);
+    book.validator.isNotBeEmpty(book.id, "id");
+    await book.validator.objectMustBeExist(BookEntity, book.id, "id", "Book");
     return book;
   }
 }
