@@ -50,3 +50,37 @@ exports.insertOneReader = async function (
     id: id,
   });
 };
+
+exports.updateOneReader = async function (
+  req: express.Request,
+  res: express.Response
+) {
+  const { id } = req.params;
+  const { name, surname, phone } = req.body;
+
+  const { validator } = await ReaderValidator.checkForUbdateOne({
+    id: id,
+    name: name,
+    surname: surname,
+    phone: phone,
+  });
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
+  const readerEntity = new ReaderEntity({
+    name: name,
+    surname: surname,
+    phone: phone,
+    id: id,
+  });
+  const result = await readerEntity.updateOne();
+  res.json({
+    isSuccess: true,
+    result: result,
+  });
+};

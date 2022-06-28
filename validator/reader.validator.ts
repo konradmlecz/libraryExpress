@@ -19,6 +19,14 @@ interface PropsInsert {
   email: string;
 }
 
+interface PropsUbdate {
+  name: string;
+  surname: string;
+  phone: string;
+  email: string;
+  id: string;
+}
+
 export class ReaderValidator {
   id?: string;
   name?: string;
@@ -58,7 +66,21 @@ export class ReaderValidator {
       "email",
       "Reader"
     );
-    console.log(reader);
+    return reader;
+  }
+
+  static async checkForUbdateOne(data: PropsUbdate) {
+    const reader = new this(data);
+    reader.validator.isNotBeEmpty(reader.id, "id");
+    await reader.validator.objectMustBeExist(
+      ReaderEntity,
+      reader.id,
+      "id",
+      "Reader"
+    );
+
+    reader.validator.isNotBeEmpty(reader.name, "name");
+    reader.validator.isNotBeEmpty(reader.surname, "surname");
 
     return reader;
   }

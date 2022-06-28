@@ -7,7 +7,7 @@ export class ReaderEntity {
   surname: string;
   email: string;
   phone: string;
-  constructor({ id, name, surname, email, phone }: ReaderEntity) {
+  constructor({ id, name, surname, email, phone = null }: ReaderEntity) {
     this.id = id ?? uuid();
     this.name = name;
     this.surname = surname;
@@ -45,5 +45,17 @@ export class ReaderEntity {
       }
     );
     return results;
+  }
+  async updateOne() {
+    const [result] = await pool.execute(
+      "UPDATE `reader` SET `name`=:name, `surname`=:surname, `phone`=:phone WHERE `id`=:id",
+      {
+        name: this.name,
+        surname: this.surname,
+        phone: this.phone,
+        id: this.id,
+      }
+    );
+    return result;
   }
 }
