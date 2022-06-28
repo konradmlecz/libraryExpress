@@ -1,3 +1,5 @@
+const validator = require("email-validator");
+
 export class MainValidator {
   error: boolean;
   resultValidation: Array<string>;
@@ -20,6 +22,13 @@ export class MainValidator {
     }
   }
 
+  mailIsNotValid(property: string) {
+    if (!validator.validate(property)) {
+      this.error = true;
+      this.resultValidation.push(`Mail ${property} is not valid`);
+    }
+  }
+
   async objectMustBeExist(
     record: any,
     property: string,
@@ -30,6 +39,19 @@ export class MainValidator {
     if (!obj) {
       this.error = true;
       this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+    }
+  }
+  async objectMustNotBeExist(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.checkIsUserWithEmail(property);
+
+    if (obj) {
+      this.error = true;
+      this.resultValidation.push(`${type} with ${key} ${property} exist`);
     }
   }
 }

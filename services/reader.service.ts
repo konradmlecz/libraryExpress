@@ -26,3 +26,27 @@ exports.getOneReader = async function (
     result: result,
   });
 };
+
+exports.insertOneReader = async function (
+  req: express.Request,
+  res: express.Response
+) {
+  const { name, surname, email, phone } = req.body;
+
+  const { validator } = await ReaderValidator.checkForInsertOne(req.body);
+
+  if (validator.error) {
+    return res.json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
+  const readerEntity = new ReaderEntity({ name, surname, email, phone });
+  const id = await readerEntity.insertOne();
+
+  res.json({
+    isSuccess: true,
+    id: id,
+  });
+};

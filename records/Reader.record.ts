@@ -7,9 +7,12 @@ export class ReaderEntity {
   surname: string;
   email: string;
   phone: string;
-  constructor({ id, name }: ReaderEntity) {
+  constructor({ id, name, surname, email, phone }: ReaderEntity) {
     this.id = id ?? uuid();
     this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
   }
   async insertOne() {
     await pool.execute(
@@ -30,6 +33,15 @@ export class ReaderEntity {
       "SELECT * FROM `reader` WHERE `id`=:id",
       {
         id: id,
+      }
+    );
+    return results;
+  }
+  static async checkIsUserWithEmail(email: string) {
+    const [results] = await pool.execute(
+      "SELECT * FROM `reader` WHERE `email`=:email",
+      {
+        email: email,
       }
     );
     return results;
