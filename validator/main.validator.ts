@@ -54,4 +54,37 @@ export class MainValidator {
       this.resultValidation.push(`${type} with ${key} ${property} exist`);
     }
   }
+
+  async bookMustBeExistAndNotBeLend(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.getOne(property);
+
+    if (!obj) {
+      this.error = true;
+      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+    }
+    if (obj && Boolean(obj.isLend)) {
+      this.error = true;
+      this.resultValidation.push(`${type} with ${key} ${property} is Lend`);
+    }
+  }
+
+  async readerMustNotHaveTwoLendBook(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.count(property);
+    if (obj["COUNT (*)"] >= 2) {
+      this.error = true;
+      this.resultValidation.push(
+        `${type} with ${key} ${property} have not lend more than 2 book`
+      );
+    }
+  }
 }
