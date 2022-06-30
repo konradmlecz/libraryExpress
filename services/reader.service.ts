@@ -111,6 +111,29 @@ exports.lendOneBook = async function (
   });
 };
 
+exports.deleteOneBook = async function (
+  req: express.Request,
+  res: express.Response
+) {
+  const { readerId, bookId } = req.body;
+
+  const { validator } = await ReaderBookValidator.checkDeleteBook(req.body);
+
+  if (validator.error) {
+    return res.status(400).json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
+  const [result] = await ReaderBookEntity.deleteOne(bookId, readerId);
+
+  res.status(200).json({
+    isSuccess: true,
+    result,
+  });
+};
+
 exports.getlendBooks = async function (
   req: express.Request,
   res: express.Response

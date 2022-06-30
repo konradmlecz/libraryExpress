@@ -15,6 +15,11 @@ interface PropsInsert {
   id?: string;
 }
 
+interface PropsDelete {
+  readerId: string;
+  bookId: string;
+}
+
 interface PropsGetAll {
   readerId: string;
 }
@@ -71,6 +76,20 @@ export class ReaderBookValidator {
   static async checkGetAll(data: PropsGetAll) {
     const readerBook = new this(data);
     readerBook.validator.isNotBeEmpty(readerBook.readerId, "readerId");
+    return readerBook;
+  }
+
+  static async checkDeleteBook(data: PropsDelete) {
+    const readerBook = new this(data);
+    readerBook.validator.isNotBeEmpty(readerBook.readerId, "readerId");
+    readerBook.validator.isNotBeEmpty(readerBook.bookId, "boookId");
+    await readerBook.validator.bookMustBeLendByReader(
+      ReaderBookEntity,
+      readerBook.bookId,
+      readerBook.readerId,
+      "BookId",
+      "Book"
+    );
     return readerBook;
   }
 }
