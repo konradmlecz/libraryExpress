@@ -23,7 +23,7 @@ exports.insertOneBook = async function (
   const { validator } = await BookValidator.checkForInsertOne(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -62,7 +62,7 @@ exports.getOneBook = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });

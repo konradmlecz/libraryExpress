@@ -21,7 +21,7 @@ exports.insertOneAuthor = async function (
   const { validator } = AuthorValidator.checkForInsertOne(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -46,7 +46,7 @@ exports.getOneAuthor = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -73,7 +73,7 @@ exports.updateOneAuthor = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });

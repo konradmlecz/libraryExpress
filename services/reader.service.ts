@@ -15,7 +15,7 @@ exports.getOneReader = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -38,7 +38,7 @@ exports.insertOneReader = async function (
   const { validator } = await ReaderBookValidator.checkForInsertOne(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -68,7 +68,7 @@ exports.updateOneReader = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -96,7 +96,7 @@ exports.lendOneBook = async function (
   const { validator } = await ReaderBookValidator.checkLendOneBook(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -120,7 +120,7 @@ exports.getlendBooks = async function (
   const { validator } = await ReaderBookValidator.checkGetAll(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });

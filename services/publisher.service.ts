@@ -19,7 +19,7 @@ exports.insertOne = async function (
   const { validator } = PublisherValidator.checkForInsertOne(req.body);
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -40,7 +40,7 @@ exports.getOne = async function (req: express.Request, res: express.Response) {
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
@@ -67,7 +67,7 @@ exports.updateOne = async function (
   });
 
   if (validator.error) {
-    return res.json({
+    return res.status(400).json({
       isSuccess: false,
       resultValidation: validator.resultValidation,
     });
