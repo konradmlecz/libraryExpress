@@ -82,6 +82,23 @@ export class MainValidator {
     }
   }
 
+  async bookMustBeLendByReader(
+    record: any,
+    propertyOne: string,
+    propertyTwo: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.getOneLend(propertyOne, propertyTwo);
+    console.log(obj, "obj");
+    if (!obj.length) {
+      this.error = true;
+      this.resultValidation.push(
+        `${type} with ${key} ${propertyOne} is no be lend by Reader`
+      );
+    }
+  }
+
   async readerMustNotHaveTwoLendBook(
     record: any,
     property: string,

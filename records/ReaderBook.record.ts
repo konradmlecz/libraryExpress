@@ -38,6 +38,28 @@ export class ReaderBookEntity {
     return results;
   }
 
+  static async getOneLend(bookId: string, readerId: string) {
+    const results = await pool.execute(
+      "SELECT * FROM `book_reader` WHERE `bookId`=:bookId AND `readerId`=:readerId",
+      {
+        bookId: bookId,
+        readerId: readerId,
+      }
+    );
+    return results;
+  }
+
+  static async deleteOne(bookId: string, readerId: string) {
+    const results = await pool.execute(
+      "DELETE FROM `book_reader` WHERE `bookId`=:bookId AND `readerId`=:readerId ",
+      {
+        bookId: bookId,
+        readerId: readerId,
+      }
+    );
+    return results;
+  }
+
   static async getAll(readerId: string) {
     const results = await pool.execute(
       "SELECT * FROM `book_reader` JOIN `book` ON `book_reader`.`bookId` = `book`.`id` WHERE `readerId`=:readerId ",
