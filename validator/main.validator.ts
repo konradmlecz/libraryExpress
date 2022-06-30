@@ -90,7 +90,11 @@ export class MainValidator {
     type: string
   ) {
     const [obj] = await record.getOneLend(propertyOne, propertyTwo);
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> 4554881b773c6e8b3db9b684a91e01d7b5df5f76
     if (!obj.length) {
       this.error = true;
       this.resultValidation.push(
