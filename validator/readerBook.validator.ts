@@ -44,10 +44,17 @@ export class ReaderBookValidator {
       "Reader"
     );
 
-    await readerBook.validator.bookMustBeExistAndNotBeLend(
+    await readerBook.validator.bookMustBeExist(
       BookEntity,
       readerBook.bookId,
       "id",
+      "Book"
+    );
+
+    await readerBook.validator.bookNotBeLend(
+      ReaderBookEntity,
+      readerBook.bookId,
+      "bookId",
       "Book"
     );
 

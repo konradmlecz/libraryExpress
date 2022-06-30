@@ -55,7 +55,7 @@ export class MainValidator {
     }
   }
 
-  async bookMustBeExistAndNotBeLend(
+  async bookMustBeExist(
     record: any,
     property: string,
     key: string,
@@ -67,7 +67,16 @@ export class MainValidator {
       this.error = true;
       this.resultValidation.push(`${type} with ${key} ${property} not exist`);
     }
-    if (obj && Boolean(obj.isLend)) {
+  }
+
+  async bookNotBeLend(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.getOne(property);
+    if (obj.length) {
       this.error = true;
       this.resultValidation.push(`${type} with ${key} ${property} is Lend`);
     }
