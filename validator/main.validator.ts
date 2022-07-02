@@ -1,11 +1,16 @@
+import { ReaderEntity } from "../records/Reader.record";
+
 const validator = require("email-validator");
+const bcrypt = require("bcryptjs");
 
 export class MainValidator {
   error: boolean;
   resultValidation: Array<string>;
+  entity: null | ReaderEntity;
   constructor() {
     this.error = false;
     this.resultValidation = [];
+    this.entity = null;
   }
 
   isNotBeEmpty(property: string, key: string) {
@@ -35,13 +40,45 @@ export class MainValidator {
     key: string,
     type: string
   ) {
-    const [obj] = await record.getOne(property);
+    const [obj] = await record.getOneById(property);
     if (!obj) {
       this.error = true;
       this.resultValidation.push(`${type} with ${key} ${property} not exist`);
     }
+    if (obj) {
+      this.entity = obj;
+    }
   }
-  async objectMustNotBeExist(
+
+  async objectWithEmailMustBeExist(
+    record: any,
+    property: string,
+    key: string,
+    type: string
+  ) {
+    const [obj] = await record.getOneByEmail(property);
+    if (!obj) {
+      this.error = true;
+      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+    }
+    if (obj) {
+      this.entity = obj;
+    }
+  }
+
+  isAuthenticated(password: string) {
+    console.log(this.entity);
+    let passwordIsCorrect = false;
+    if (this.entity.password || password) {
+      passwordIsCorrect = bcrypt.compareSync(password, this.entity.password);
+    }
+    if (!passwordIsCorrect) {
+      this.error = true;
+      this.resultValidation.push(`Password is not correct`);
+    }
+  }
+
+  async objectWithMailMustNotBeExist(
     record: any,
     property: string,
     key: string,

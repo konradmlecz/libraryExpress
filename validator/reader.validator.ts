@@ -6,6 +6,7 @@ interface Props {
   name?: string;
   id?: string;
   email?: string;
+  password?: string;
 }
 
 interface PropsGetOne {
@@ -17,6 +18,7 @@ interface PropsInsert {
   surname: string;
   phone: string;
   email: string;
+  password: string;
 }
 
 interface PropsUbdate {
@@ -32,14 +34,51 @@ export class ReaderValidator {
   name?: string;
   surname?: string;
   email?: string;
+  password?: string;
   validator: MainValidator;
 
-  constructor({ name, surname, id, email }: Props) {
+  constructor({ name, surname, id, email, password }: Props) {
     this.id = id;
     this.name = name;
     this.surname = surname;
     this.email = email;
+    this.password = password;
     this.validator = new MainValidator();
+  }
+
+  static async checkLogin(data: PropsInsert) {
+    const reader = new this(data);
+
+    reader.validator.isNotBeEmpty(reader.email, "email");
+    if (!reader.email) reader.email = "";
+    await reader.validator.objectWithEmailMustBeExist(
+      ReaderEntity,
+      reader.email,
+      "email",
+      "Reader"
+    );
+    if (reader.validator.entity) {
+      reader.validator.isAuthenticated(reader.password);
+    }
+
+    return reader;
+  }
+
+  static async checkSignUp(data: PropsInsert) {
+    const reader = new this(data);
+
+    reader.validator.isNotBeEmpty(reader.name, "name");
+    reader.validator.isNotBeEmpty(reader.surname, "surname");
+    reader.validator.isNotBeEmpty(reader.password, "password");
+    reader.validator.mailIsNotValid(reader.email);
+    if (!reader.email) reader.email = "";
+    await reader.validator.objectWithMailMustNotBeExist(
+      ReaderEntity,
+      reader.email,
+      "email",
+      "Reader"
+    );
+    return reader;
   }
 
   static async checkForGeteOne(data: PropsGetOne) {
@@ -49,21 +88,6 @@ export class ReaderValidator {
       ReaderEntity,
       reader.id,
       "id",
-      "Reader"
-    );
-    return reader;
-  }
-
-  static async checkForInsertOne(data: PropsInsert) {
-    const reader = new this(data);
-
-    reader.validator.isNotBeEmpty(reader.name, "name");
-    reader.validator.isNotBeEmpty(reader.surname, "surname");
-    reader.validator.mailIsNotValid(reader.email);
-    await reader.validator.objectMustNotBeExist(
-      ReaderEntity,
-      reader.email,
-      "email",
       "Reader"
     );
     return reader;

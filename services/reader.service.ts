@@ -3,6 +3,7 @@ const { ReaderEntity } = require("../records/Reader.record");
 const { ReaderBookEntity } = require("../records/ReaderBook.record");
 const { ReaderValidator } = require("../validator/reader.validator");
 const { ReaderBookValidator } = require("../validator/readerBook.validator");
+const bcrypt = require("bcryptjs");
 
 exports.getOneReader = async function (
   req: express.Request,
@@ -21,35 +22,11 @@ exports.getOneReader = async function (
     });
   }
 
-  const [result] = await ReaderEntity.getOne(id);
+  const [result] = await ReaderEntity.getOneById(id);
 
   res.json({
     isSuccess: true,
     result: result,
-  });
-};
-
-exports.insertOneReader = async function (
-  req: express.Request,
-  res: express.Response
-) {
-  const { name, surname, email, phone } = req.body;
-
-  const { validator } = await ReaderBookValidator.checkForInsertOne(req.body);
-
-  if (validator.error) {
-    return res.status(400).json({
-      isSuccess: false,
-      resultValidation: validator.resultValidation,
-    });
-  }
-
-  const readerEntity = new ReaderEntity({ name, surname, email, phone });
-  const id = await readerEntity.insertOne();
-
-  res.json({
-    isSuccess: true,
-    id: id,
   });
 };
 
@@ -154,5 +131,67 @@ exports.getlendBooks = async function (
   res.status(200).json({
     isSuccess: true,
     result,
+  });
+};
+
+exports.signUp = async function (req: express.Request, res: express.Response) {
+  const { name, surname, email, phone, password } = req.body;
+
+  const { validator } = await ReaderValidator.checkSignUp(req.body);
+
+  if (validator.error) {
+    return res.status(400).json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  const readerEntity = new ReaderEntity({
+    name,
+    surname,
+    email,
+    phone,
+    password: hashedPassword,
+  });
+
+  const id = await readerEntity.insertOne();
+
+  res.json({
+    isSuccess: true,
+    id: id,
+  });
+};
+
+exports.loginIn = async function (req: express.Request, res: express.Response) {
+  const { email, password } = req.body;
+
+  const { validator } = await ReaderValidator.checkLogin(req.body);
+
+  if (validator.error) {
+    return res.status(400).json({
+      isSuccess: false,
+      resultValidation: validator.resultValidation,
+    });
+  }
+
+  // const salt = bcrypt.genSaltSync(10);
+  // const hashedPassword = bcrypt.hashSync(password, salt);
+
+  // const readerEntity = new ReaderEntity({
+  //   name,
+  //   surname,
+  //   email,
+  //   phone,
+  //   password: hashedPassword,
+  // });
+
+  // const id = await readerEntity.insertOne();
+
+  res.json({
+    isSuccess: true,
+    // id: id,
   });
 };
