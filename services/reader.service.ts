@@ -4,6 +4,7 @@ const { ReaderBookEntity } = require("../records/ReaderBook.record");
 const { ReaderValidator } = require("../validator/reader.validator");
 const { ReaderBookValidator } = require("../validator/readerBook.validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.getOneReader = async function (
   req: express.Request,
@@ -177,21 +178,14 @@ exports.loginIn = async function (req: express.Request, res: express.Response) {
     });
   }
 
-  // const salt = bcrypt.genSaltSync(10);
-  // const hashedPassword = bcrypt.hashSync(password, salt);
-
-  // const readerEntity = new ReaderEntity({
-  //   name,
-  //   surname,
-  //   email,
-  //   phone,
-  //   password: hashedPassword,
-  // });
-
-  // const id = await readerEntity.insertOne();
-
+  const token = jwt.sign(
+    { email: email, id: validator.entity.id },
+    process.env.sk,
+    { expiresIn: "1h" },
+    { algorithm: "RS256" }
+  );
   res.json({
     isSuccess: true,
-    // id: id,
+    token,
   });
 };

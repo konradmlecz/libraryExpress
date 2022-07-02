@@ -1,3 +1,4 @@
+import { resolve } from "path";
 const expressReader = require("express");
 const routerReader = expressReader.Router();
 const {
@@ -9,6 +10,7 @@ const {
   signUp,
   loginIn,
 } = require("../services/reader.service");
+const { authentication } = require("../utils/authentification");
 routerReader.post("/signup", signUp);
 routerReader.post("/login", loginIn);
 routerReader.get("/book", getlendBooks);
