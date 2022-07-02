@@ -6,9 +6,13 @@ const {
   insertOneAuthor,
   updateOneAuthor,
 } = require("../services/author.service");
-routerAuthor.get("/", getAllAuthor);
-routerAuthor.get("/:id", getOneAuthor);
-routerAuthor.put("/:id", updateOneAuthor);
-routerAuthor.post("/", insertOneAuthor);
+const {
+  authenticationReader: R,
+  authenticationAdmin: A,
+} = require("../utils/authentification");
+routerAuthor.get("/", R, A, getAllAuthor);
+routerAuthor.get("/:id", R, A, getOneAuthor);
+routerAuthor.put("/:id", R, A, updateOneAuthor);
+routerAuthor.post("/", R, A, insertOneAuthor);
 
 module.exports = routerAuthor;

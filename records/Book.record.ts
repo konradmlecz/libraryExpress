@@ -41,7 +41,7 @@ export class BookEntity {
     return bookItems;
   }
 
-  static async getOne(id: string) {
+  static async getOneById(id: string) {
     const [results] = await pool.execute(
       "SELECT * FROM `book` WHERE `id`=:id",
       {

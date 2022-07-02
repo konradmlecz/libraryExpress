@@ -35,7 +35,7 @@ export class PublisherEntity {
     return publisherItems;
   }
 
-  static async getOne(id: string) {
+  static async getOneById(id: string) {
     const [results] = await pool.execute(
       "SELECT * FROM `publisher` WHERE `id`=:id",
       {

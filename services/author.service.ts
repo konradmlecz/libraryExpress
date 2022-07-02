@@ -52,7 +52,7 @@ exports.getOneAuthor = async function (
     });
   }
 
-  const [result] = await AuthorEntity.getOne(id);
+  const [result] = await AuthorEntity.getOneById(id);
   res.json({
     isSuccess: true,
     result: result,

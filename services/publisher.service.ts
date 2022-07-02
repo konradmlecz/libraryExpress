@@ -46,7 +46,7 @@ exports.getOne = async function (req: express.Request, res: express.Response) {
     });
   }
 
-  const [result] = await PublisherEntity.getOne(id);
+  const [result] = await PublisherEntity.getOneById(id);
 
   res.json({
     isSuccess: true,

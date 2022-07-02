@@ -39,7 +39,7 @@ export class AuthorEntity {
     return authorItems;
   }
 
-  static async getOne(id: string) {
+  static async getOneById(id: string) {
     const [results] = await pool.execute(
       "SELECT * FROM `author` WHERE `id`=:id",
       {

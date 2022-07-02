@@ -65,7 +65,7 @@ export class BookValidator {
     return book;
   }
 
-  static async checkForGeteOne(data: PropsGetOne) {
+  static async checkForGetOne(data: PropsGetOne) {
     const book = new this(data);
     book.validator.isNotBeEmpty(book.id, "id");
     await book.validator.objectMustBeExist(BookEntity, book.id, "id", "Book");

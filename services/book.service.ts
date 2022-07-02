@@ -57,7 +57,7 @@ exports.getOneBook = async function (
 ) {
   const { id } = req.params;
 
-  const { validator } = await BookValidator.checkForGeteOne({
+  const { validator } = await BookValidator.checkForGetOne({
     id: id,
   });
 
@@ -68,7 +68,7 @@ exports.getOneBook = async function (
     });
   }
 
-  const [result] = await BookEntity.getOne(id);
+  const [result] = await BookEntity.getOneById(id);
   res.json({
     isSuccess: true,
     result: result,
