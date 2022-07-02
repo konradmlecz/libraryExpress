@@ -10,7 +10,7 @@ exports.getOneReader = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { id } = req.params;
+  const { id } = res.locals.reader;
 
   const { validator } = await ReaderValidator.checkForGeteOne({
     id: id,
@@ -35,7 +35,7 @@ exports.updateOneReader = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { id } = req.params;
+  const { id } = res.locals.reader;
   const { name, surname, phone } = req.body;
 
   const { validator } = await ReaderValidator.checkForUbdateOne({
@@ -69,9 +69,14 @@ exports.lendOneBook = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { readerId, bookId } = req.body;
+  const { id: readerId } = res.locals.reader;
 
-  const { validator } = await ReaderBookValidator.checkLendOneBook(req.body);
+  const { bookId } = req.body;
+
+  const { validator } = await ReaderBookValidator.checkLendOneBook({
+    readerId,
+    bookId,
+  });
 
   if (validator.error) {
     return res.status(400).json({
@@ -81,11 +86,10 @@ exports.lendOneBook = async function (
   }
 
   const readerBookEntity = new ReaderBookEntity({ readerId, bookId });
-  const id = await readerBookEntity.insertOne();
-
+  await readerBookEntity.insertOne();
   res.json({
     isSuccess: true,
-    id: id,
+    message: "book was lend",
   });
 };
 
@@ -93,9 +97,14 @@ exports.deleteOneBook = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { readerId, bookId } = req.body;
+  const { id: readerId } = res.locals.reader;
 
-  const { validator } = await ReaderBookValidator.checkDeleteBook(req.body);
+  const { bookId } = req.body;
+
+  const { validator } = await ReaderBookValidator.checkDeleteBook({
+    readerId,
+    bookId,
+  });
 
   if (validator.error) {
     return res.status(400).json({
@@ -104,11 +113,11 @@ exports.deleteOneBook = async function (
     });
   }
 
-  const [result] = await ReaderBookEntity.deleteOne(bookId, readerId);
+  await ReaderBookEntity.deleteOne(bookId, readerId);
 
   res.status(200).json({
     isSuccess: true,
-    result,
+    message: "book was return",
   });
 };
 
@@ -116,9 +125,8 @@ exports.getlendBooks = async function (
   req: express.Request,
   res: express.Response
 ) {
-  const { readerId } = req.body;
-
-  const { validator } = await ReaderBookValidator.checkGetAll(req.body);
+  const { id } = res.locals.reader;
+  const { validator } = await ReaderBookValidator.checkGetAll({ readerId: id });
 
   if (validator.error) {
     return res.status(400).json({
@@ -127,7 +135,7 @@ exports.getlendBooks = async function (
     });
   }
 
-  const [result] = await ReaderBookEntity.getAll(readerId);
+  const [result] = await ReaderBookEntity.getAll(id);
 
   res.status(200).json({
     isSuccess: true,
@@ -160,14 +168,14 @@ exports.signUp = async function (req: express.Request, res: express.Response) {
 
   const id = await readerEntity.insertOne();
 
-  res.json({
+  res.status(201).json({
     isSuccess: true,
     id: id,
   });
 };
 
 exports.loginIn = async function (req: express.Request, res: express.Response) {
-  const { email, password } = req.body;
+  const { email } = req.body;
 
   const { validator } = await ReaderValidator.checkLogin(req.body);
 

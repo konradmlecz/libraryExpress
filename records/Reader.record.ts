@@ -38,9 +38,19 @@ export class ReaderEntity {
     return this.id;
   }
 
+  static async getRoleById(id: string) {
+    const [results] = await pool.execute(
+      "SELECT `role` FROM `reader` WHERE `id`=:id",
+      {
+        id: id,
+      }
+    );
+    return results;
+  }
+
   static async getOneById(id: string) {
     const [results] = await pool.execute(
-      "SELECT * FROM `reader` WHERE `id`=:id",
+      "SELECT `id`,`name`,`surname`,`phone`,`email` FROM `reader` WHERE `id`=:id",
       {
         id: id,
       }

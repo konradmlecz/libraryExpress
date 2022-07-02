@@ -10,12 +10,23 @@ const {
   signUp,
   loginIn,
 } = require("../services/reader.service");
-const { authentication } = require("../utils/authentification");
+const {
+  authenticationReader,
+  authenticationAdmin,
+} = require("../utils/authentification");
+
+// reader authentication
 routerReader.post("/signup", signUp);
 routerReader.post("/login", loginIn);
-routerReader.get("/book", getlendBooks);
-routerReader.post("/book", lendOneBook);
-routerReader.delete("/book", deleteOneBook);
-routerReader.get("/:id", getOneReader);
-routerReader.put("/:id", updateOneReader);
+
+// reader book
+routerReader.get("/book", authenticationReader, getlendBooks);
+routerReader.post("/book", authenticationReader, lendOneBook);
+routerReader.delete("/book", authenticationReader, deleteOneBook);
+
+// reader acount
+
+routerReader.get("/", authenticationReader, getOneReader);
+routerReader.put("/", authenticationReader, updateOneReader);
+
 module.exports = routerReader;

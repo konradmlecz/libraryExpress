@@ -67,7 +67,6 @@ export class MainValidator {
   }
 
   isAuthenticated(password: string) {
-    console.log(this.entity);
     let passwordIsCorrect = false;
     if (this.entity.password || password) {
       passwordIsCorrect = bcrypt.compareSync(password, this.entity.password);

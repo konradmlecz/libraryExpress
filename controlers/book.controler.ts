@@ -5,8 +5,8 @@ const {
   getOneBook,
   insertOneBook,
 } = require("../services/book.service");
-const { authentication } = require("../utils/authentification");
-routerBook.get("/", authentication, getAllBook);
+const { authenticationReader } = require("../utils/authentification");
+routerBook.get("/", authenticationReader, getAllBook);
 routerBook.get("/:id", getOneBook);
 routerBook.post("/", insertOneBook);
 
