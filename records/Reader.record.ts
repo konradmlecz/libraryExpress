@@ -68,16 +68,6 @@ export class ReaderEntity {
     return results;
   }
 
-  static async checkIsUserWithEmail(email: string) {
-    const [results] = await pool.execute(
-      "SELECT * FROM `reader` WHERE `email`=:email",
-      {
-        email: email,
-      }
-    );
-    return results;
-  }
-
   async updateOne() {
     const [result] = await pool.execute(
       "UPDATE `reader` SET `name`=:name, `surname`=:surname, `phone`=:phone WHERE `id`=:id",

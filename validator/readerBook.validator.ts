@@ -36,39 +36,41 @@ export class ReaderBookValidator {
     this.validator = new MainValidator();
   }
 
+  async bookNotBeLend() {
+    const [obj] = await ReaderBookEntity.getOne(this.bookId);
+    if (obj.length) {
+      this.validator.addError("Book with id is lend");
+    }
+  }
+
+  async readerMustNotHaveTwoLendBook() {
+    const [obj] = await ReaderBookEntity.count(this.readerId);
+    if (obj["COUNT (*)"] >= 2) {
+      this.validator.addError("Reader have not lend more than 2 book");
+    }
+  }
+
+  async bookMustBeLendByReader() {
+    const [obj] = await ReaderBookEntity.getOneLend(this.bookId, this.readerId);
+
+    if (!obj.length) {
+      this.validator.addError(`Book is not be lend by Reader`);
+    }
+  }
+
   static async checkLendOneBook(data: PropsInsert) {
     const readerBook = new this(data);
 
     readerBook.validator.isNotBeEmpty(readerBook.readerId, "readerId");
     readerBook.validator.isNotBeEmpty(readerBook.bookId, "bookId");
 
-    await readerBook.validator.objectMustBeExist(
-      ReaderEntity,
-      readerBook.readerId,
-      "id",
-      "Reader"
-    );
+    await readerBook.validator.readerMustBeExist(readerBook.readerId);
 
-    await readerBook.validator.bookMustBeExist(
-      BookEntity,
-      readerBook.bookId,
-      "id",
-      "Book"
-    );
+    await readerBook.validator.bookMustBeExist(readerBook.bookId);
 
-    await readerBook.validator.bookNotBeLend(
-      ReaderBookEntity,
-      readerBook.bookId,
-      "bookId",
-      "Book"
-    );
+    await readerBook.bookNotBeLend();
 
-    await readerBook.validator.readerMustNotHaveTwoLendBook(
-      ReaderBookEntity,
-      readerBook.readerId,
-      "readerId",
-      "Reader"
-    );
+    await readerBook.readerMustNotHaveTwoLendBook();
 
     return readerBook;
   }
@@ -83,13 +85,7 @@ export class ReaderBookValidator {
     const readerBook = new this(data);
     readerBook.validator.isNotBeEmpty(readerBook.readerId, "readerId");
     readerBook.validator.isNotBeEmpty(readerBook.bookId, "boookId");
-    await readerBook.validator.bookMustBeLendByReader(
-      ReaderBookEntity,
-      readerBook.bookId,
-      readerBook.readerId,
-      "BookId",
-      "Book"
-    );
+    await readerBook.bookMustBeLendByReader();
     return readerBook;
   }
 }

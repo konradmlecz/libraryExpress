@@ -22,11 +22,17 @@ export class PublisherValidator {
   name?: string;
   id?: string;
   validator: MainValidator;
+  entity: null | typeof PublisherEntity;
 
   constructor({ name, id }: Props) {
     this.name = name;
     this.id = id;
     this.validator = new MainValidator();
+    this.entity = null;
+  }
+
+  setEnity(entity: null | typeof PublisherEntity) {
+    this.entity = entity;
   }
 
   static checkForInsertOne(data: PropsInsert) {
@@ -40,11 +46,9 @@ export class PublisherValidator {
   static async checkForUbdateOne(data: PropsUbdate) {
     const publisher = new this(data);
     publisher.validator.isNotBeEmpty(publisher.id, "id");
-    await publisher.validator.objectMustBeExist(
-      PublisherEntity,
+    await publisher.validator.authorMustBeExist(
       publisher.id,
-      "id",
-      "Publisher"
+      publisher.setEnity
     );
     publisher.validator.isNotBeEmpty(publisher.name, "name");
 
@@ -54,11 +58,9 @@ export class PublisherValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const publisher = new this(data);
     publisher.validator.isNotBeEmpty(publisher.id, "id");
-    await publisher.validator.objectMustBeExist(
-      PublisherEntity,
+    await publisher.validator.authorMustBeExist(
       publisher.id,
-      "id",
-      "Publisher"
+      publisher.setEnity
     );
     return publisher;
   }

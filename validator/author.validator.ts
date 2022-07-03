@@ -1,5 +1,5 @@
+import { AuthorEntity } from "../records/Author.record";
 import { MainValidator } from "./main.validator";
-const { AuthorEntity } = require("../records/Author.record");
 
 interface Props {
   surname?: string;
@@ -27,12 +27,18 @@ export class AuthorValidator {
   name?: string;
   surname?: string;
   validator: MainValidator;
+  entity: null | AuthorEntity;
 
   constructor({ name, surname, id }: Props) {
     this.id = id;
     this.name = name;
     this.surname = surname;
+    this.entity = null;
     this.validator = new MainValidator();
+  }
+
+  setEnity(entity: null | AuthorEntity) {
+    this.entity = entity;
   }
 
   static checkForInsertOne(data: PropsInsert) {
@@ -47,12 +53,7 @@ export class AuthorValidator {
   static async checkForUbdateOne(data: PropsUbdate) {
     const author = new this(data);
     author.validator.isNotBeEmpty(author.id, "id");
-    await author.validator.objectMustBeExist(
-      AuthorEntity,
-      author.id,
-      "id",
-      "Author"
-    );
+    await author.validator.authorMustBeExist(author.id, author.setEnity);
 
     author.validator.isNotBeEmpty(author.name, "name");
     author.validator.isNotBeEmpty(author.surname, "surname");
@@ -61,14 +62,9 @@ export class AuthorValidator {
   }
 
   static async checkForGeteOne(data: PropsGetOne) {
-    const publisher = new this(data);
-    publisher.validator.isNotBeEmpty(publisher.id, "id");
-    await publisher.validator.objectMustBeExist(
-      AuthorEntity,
-      publisher.id,
-      "id",
-      "Author"
-    );
-    return publisher;
+    const author = new this(data);
+    author.validator.isNotBeEmpty(author.id, "id");
+    await author.validator.authorMustBeExist(author.id, author.setEnity);
+    return author;
   }
 }

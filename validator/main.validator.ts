@@ -1,7 +1,9 @@
 import { ReaderEntity } from "../records/Reader.record";
+import { AuthorEntity } from "../records/Author.record";
+import { BookEntity } from "../records/Book.record";
+import { PublisherEntity } from "../records/Publisher.record";
 
 const validator = require("email-validator");
-const bcrypt = require("bcryptjs");
 
 export class MainValidator {
   error: boolean;
@@ -13,140 +15,82 @@ export class MainValidator {
     this.entity = null;
   }
 
+  addError(err: string) {
+    this.error = true;
+    this.resultValidation.push(err);
+  }
+
   isNotBeEmpty(property: string, key: string) {
     if (!property) {
-      this.error = true;
-      this.resultValidation.push(`Property ${key} is Not Be Empty`);
+      this.addError(`Property ${key} is Not Be Empty`);
     }
   }
 
   isNotNumber(property: number, key: string) {
     if (isNaN(property) || property === 0) {
-      this.error = true;
-      this.resultValidation.push(`Property ${key} is not Number`);
+      this.addError(`Property ${key} is not Number`);
     }
   }
 
   mailIsNotValid(property: string) {
     if (!validator.validate(property)) {
-      this.error = true;
-      this.resultValidation.push(`Mail ${property} is not valid`);
+      this.addError(`Mail ${property} is not valid`);
     }
   }
 
-  async objectMustBeExist(
-    record: any,
-    property: string,
-    key: string,
-    type: string
+  async publisherMustBeExist(
+    id: string,
+    setEnity?: (entity: null | PublisherEntity) => void
   ) {
-    const [obj] = await record.getOneById(property);
+    const [obj]: any = await PublisherEntity.getOneById(id);
+
     if (!obj) {
-      this.error = true;
-      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+      this.addError(`Publisher with ${id} not exist`);
     }
-    if (obj) {
-      this.entity = obj;
+    if (obj && setEnity) {
+      setEnity(obj);
     }
   }
 
-  async objectWithEmailMustBeExist(
-    record: any,
-    property: string,
-    key: string,
-    type: string
+  async authorMustBeExist(
+    id: string,
+    setEnity?: (entity: null | AuthorEntity) => void
   ) {
-    const [obj] = await record.getOneByEmail(property);
+    const [obj]: any = await AuthorEntity.getOneById(id);
+
     if (!obj) {
-      this.error = true;
-      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+      this.addError(`Author with ${id} not exist`);
     }
-    if (obj) {
-      this.entity = obj;
-    }
-  }
-
-  isAuthenticated(password: string) {
-    let passwordIsCorrect = false;
-    if (this.entity.password || password) {
-      passwordIsCorrect = bcrypt.compareSync(password, this.entity.password);
-    }
-    if (!passwordIsCorrect) {
-      this.error = true;
-      this.resultValidation.push(`Password is not correct`);
-    }
-  }
-
-  async objectWithMailMustNotBeExist(
-    record: any,
-    property: string,
-    key: string,
-    type: string
-  ) {
-    const [obj] = await record.checkIsUserWithEmail(property);
-
-    if (obj) {
-      this.error = true;
-      this.resultValidation.push(`${type} with ${key} ${property} exist`);
+    if (obj && setEnity) {
+      setEnity(obj);
     }
   }
 
   async bookMustBeExist(
-    record: any,
-    property: string,
-    key: string,
-    type: string
+    id: string,
+    setEnity?: (entity: null | BookEntity) => void
   ) {
-    const [obj] = await record.getOne(property);
+    const [obj]: any = await BookEntity.getOneById(id);
 
     if (!obj) {
-      this.error = true;
-      this.resultValidation.push(`${type} with ${key} ${property} not exist`);
+      this.addError(`Boook with ${id} not exist`);
+    }
+    if (obj && setEnity) {
+      setEnity(obj);
     }
   }
 
-  async bookNotBeLend(
-    record: any,
-    property: string,
-    key: string,
-    type: string
+  async readerMustBeExist(
+    id: string,
+    setEnity?: (entity: null | ReaderEntity) => void
   ) {
-    const [obj] = await record.getOne(property);
-    if (obj.length) {
-      this.error = true;
-      this.resultValidation.push(`${type} with ${key} ${property} is Lend`);
+    const [obj]: any = await ReaderEntity.getOneById(id);
+
+    if (!obj) {
+      this.addError(`Reader with ${id} not exist`);
     }
-  }
-
-  async bookMustBeLendByReader(
-    record: any,
-    propertyOne: string,
-    propertyTwo: string,
-    key: string,
-    type: string
-  ) {
-    const [obj] = await record.getOneLend(propertyOne, propertyTwo);
-
-    if (!obj.length) {
-      this.error = true;
-      this.resultValidation.push(
-        `${type} with ${key} ${propertyOne} is no be lend by Reader`
-      );
-    }
-  }
-
-  async readerMustNotHaveTwoLendBook(
-    record: any,
-    property: string,
-    key: string,
-    type: string
-  ) {
-    const [obj] = await record.count(property);
-    if (obj["COUNT (*)"] >= 2) {
-      this.error = true;
-      this.resultValidation.push(
-        `${type} with ${key} ${property} have not lend more than 2 book`
-      );
+    if (obj && setEnity) {
+      setEnity(obj);
     }
   }
 }

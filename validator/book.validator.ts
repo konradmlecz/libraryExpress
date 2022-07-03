@@ -1,7 +1,5 @@
+import { BookEntity } from "../records/Book.record";
 import { MainValidator } from "./main.validator";
-const { BookEntity } = require("../records/Book.record");
-const { AuthorEntity } = require("../records/Author.record");
-const { PublisherEntity } = require("../records/Publisher.record");
 
 interface Props {
   title?: string;
@@ -30,6 +28,7 @@ export class BookValidator {
   publischedAt: string;
   publisherId: string;
   authorId: string;
+  entity: null | BookEntity;
   constructor({ title, id, publischedAt, publisherId, authorId }: Props) {
     this.title = title;
     this.id = id;
@@ -37,6 +36,11 @@ export class BookValidator {
     this.publisherId = publisherId;
     this.authorId = authorId;
     this.validator = new MainValidator();
+    this.entity = null;
+  }
+
+  setEnity(entity: null | BookEntity) {
+    this.entity = entity;
   }
 
   static async checkForInsertOne(data: PropsInsert) {
@@ -50,25 +54,15 @@ export class BookValidator {
     if (!book.publisherId) book.publisherId = "empty";
     if (!book.authorId) book.authorId = "empty";
 
-    await book.validator.objectMustBeExist(
-      AuthorEntity,
-      book.authorId,
-      "id",
-      "Author"
-    );
-    await book.validator.objectMustBeExist(
-      PublisherEntity,
-      book.publisherId,
-      "id",
-      "Publisher"
-    );
+    await book.validator.authorMustBeExist(book.authorId);
+    await book.validator.publisherMustBeExist(book.publisherId);
     return book;
   }
 
   static async checkForGetOne(data: PropsGetOne) {
     const book = new this(data);
     book.validator.isNotBeEmpty(book.id, "id");
-    await book.validator.objectMustBeExist(BookEntity, book.id, "id", "Book");
+    await book.validator.bookMustBeExist(book.id, book.setEnity);
     return book;
   }
 }
