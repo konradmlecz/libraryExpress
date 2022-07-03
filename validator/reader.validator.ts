@@ -53,17 +53,6 @@ export class ReaderValidator {
     this.entity = entity;
   }
 
-  // async mustBeExist() {
-  //   const [obj]: any = await ReaderEntity.getOneById(this.id);
-
-  //   if (!obj) {
-  //     this.validator.addError(`Reader with ${this.id} not exist`);
-  //   }
-  //   if (obj) {
-  //     this.entity = obj;
-  //   }
-  // }
-
   async withEmailMustBeExist() {
     const [obj]: any = await ReaderEntity.getOneByEmail(this.email);
     if (!obj) {
@@ -100,6 +89,7 @@ export class ReaderValidator {
     reader.validator.isNotBeEmpty(reader.email, "email");
     if (!reader.email) reader.email = "";
     await reader.withEmailMustBeExist();
+
     if (reader.entity) {
       reader.isAuthenticated();
     }

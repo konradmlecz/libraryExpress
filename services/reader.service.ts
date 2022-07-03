@@ -177,7 +177,7 @@ exports.signUp = async function (req: express.Request, res: express.Response) {
 exports.loginIn = async function (req: express.Request, res: express.Response) {
   const { email } = req.body;
 
-  const { validator } = await ReaderValidator.checkLogin(req.body);
+  const { validator, entity } = await ReaderValidator.checkLogin(req.body);
 
   if (validator.error) {
     return res.status(400).json({
@@ -187,7 +187,7 @@ exports.loginIn = async function (req: express.Request, res: express.Response) {
   }
 
   const token = jwt.sign(
-    { email: email, id: validator.entity.id },
+    { email: email, id: entity.id },
     process.env.sk,
     { expiresIn: "1h" },
     { algorithm: "RS256" }

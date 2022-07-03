@@ -1,3 +1,5 @@
+import { resolve } from "path";
+
 const expressAuthor = require("express");
 const routerAuthor = expressAuthor.Router();
 const {
@@ -7,12 +9,27 @@ const {
   updateOneAuthor,
 } = require("../services/author.service");
 const {
-  authenticationReader: R,
-  authenticationAdmin: A,
+  authenticationReader,
+  authenticationAdmin,
 } = require("../utils/authentification");
-routerAuthor.get("/", R, A, getAllAuthor);
-routerAuthor.get("/:id", R, A, getOneAuthor);
-routerAuthor.put("/:id", R, A, updateOneAuthor);
-routerAuthor.post("/", R, A, insertOneAuthor);
+routerAuthor.get("/", authenticationReader, authenticationAdmin, getAllAuthor);
+routerAuthor.get(
+  "/:id",
+  authenticationReader,
+  authenticationAdmin,
+  getOneAuthor
+);
+routerAuthor.put(
+  "/:id",
+  authenticationReader,
+  authenticationAdmin,
+  updateOneAuthor
+);
+routerAuthor.post(
+  "/",
+  authenticationReader,
+  authenticationAdmin,
+  insertOneAuthor
+);
 
 module.exports = routerAuthor;

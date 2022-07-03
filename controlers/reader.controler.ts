@@ -10,10 +10,7 @@ const {
   signUp,
   loginIn,
 } = require("../services/reader.service");
-const {
-  authenticationReader,
-  authenticationAdmin,
-} = require("../utils/authentification");
+const { authenticationReader } = require("../utils/authentification");
 
 // reader authentication
 routerReader.post("/signup", signUp);

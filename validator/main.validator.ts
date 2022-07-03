@@ -8,11 +8,9 @@ const validator = require("email-validator");
 export class MainValidator {
   error: boolean;
   resultValidation: Array<string>;
-  entity: null | ReaderEntity;
   constructor() {
     this.error = false;
     this.resultValidation = [];
-    this.entity = null;
   }
 
   addError(err: string) {

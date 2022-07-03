@@ -1,3 +1,4 @@
+import { resolve } from "path";
 const express = require("express");
 const router = express.Router();
 const {
@@ -7,12 +8,12 @@ const {
   updateOne,
 } = require("../services/publisher.service");
 const {
-  authenticationReader: ar,
-  authenticationAdmin: aa,
+  authenticationReader,
+  authenticationAdmin,
 } = require("../utils/authentification");
-router.get("/", ar, aa, getAll);
-router.get("/:id", ar, aa, getOne);
-router.put("/:id", ar, aa, updateOne);
-router.post("/", ar, aa, insertOne);
+router.get("/", authenticationReader, authenticationAdmin, getAll);
+router.get("/:id", authenticationReader, authenticationAdmin, getOne);
+router.put("/:id", authenticationReader, authenticationAdmin, updateOne);
+router.post("/", authenticationReader, authenticationAdmin, insertOne);
 
 module.exports = router;
