@@ -1,6 +1,10 @@
 import { ReaderEntity } from "../records/Reader.record";
 import { MainValidator } from "./main.validator";
 const bcrypt = require("bcryptjs");
+const passwordValidator = require("password-validator");
+
+const schema = new passwordValidator();
+schema.is().min(8).is().max(20).has().uppercase();
 
 interface Props {
   surname?: string;
@@ -83,6 +87,14 @@ export class ReaderValidator {
     }
   }
 
+  validatePassword() {
+    if (!schema.validate(this.password)) {
+      this.validator.addError(
+        `Password is must have min 8 sign, max 20 sign, and one uppercase sign`
+      );
+    }
+  }
+
   static async checkLogin(data: PropsInsert) {
     const reader = new this(data);
 
@@ -101,7 +113,7 @@ export class ReaderValidator {
 
     reader.validator.isNotBeEmpty(reader.name, "name");
     reader.validator.isNotBeEmpty(reader.surname, "surname");
-    reader.validator.isNotBeEmpty(reader.password, "password");
+    reader.validatePassword();
     reader.validator.mailIsNotValid(reader.email);
     if (!reader.email) reader.email = "";
     await reader.withMailMustNotBeExist();
