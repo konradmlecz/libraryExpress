@@ -60,7 +60,7 @@ export class ReaderValidator {
   async withEmailMustBeExist() {
     const [obj]: any = await ReaderEntity.getOneByEmail(this.email);
     if (!obj) {
-      this.validator.addError("Reader with email not exist");
+      this.validator.addError("Reader with this email not exist");
     }
     if (obj) {
       this.entity = obj;
@@ -70,7 +70,7 @@ export class ReaderValidator {
   async withMailMustNotBeExist() {
     const [obj]: any = await ReaderEntity.getOneByEmail(this.email);
     if (obj) {
-      this.validator.addError(`Reader with email exist`);
+      this.validator.addError(`Reader with this email exist`);
     }
   }
 

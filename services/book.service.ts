@@ -10,6 +10,7 @@ exports.getAllBook = async function (
   const bookItems = await BookEntity.getAll();
   res.status(200).json({
     isSuccess: true,
+    message: "List of book...",
     bookItems,
   });
 };
@@ -47,6 +48,7 @@ exports.insertOneBook = async function (
 
   res.json({
     isSuccess: true,
+    message: "Book added",
     id: bookId,
   });
 };
@@ -71,6 +73,7 @@ exports.getOneBook = async function (
   const [result] = await BookEntity.getOneById(id);
   res.json({
     isSuccess: true,
+    message: "Book..",
     result: result,
   });
 };

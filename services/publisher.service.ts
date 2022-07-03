@@ -6,6 +6,7 @@ exports.getAll = async function (req: express.Request, res: express.Response) {
   const publisherItems = await PublisherEntity.getAll();
   res.status(200).json({
     isSuccess: true,
+    message: "List of Publishers",
     publisherItems,
   });
 };
@@ -21,6 +22,7 @@ exports.insertOne = async function (
   if (validator.error) {
     return res.status(400).json({
       isSuccess: false,
+      message: "Publisher added",
       resultValidation: validator.resultValidation,
     });
   }
@@ -42,6 +44,7 @@ exports.getOne = async function (req: express.Request, res: express.Response) {
   if (validator.error) {
     return res.status(400).json({
       isSuccess: false,
+      message: "Publisher..",
       resultValidation: validator.resultValidation,
     });
   }
@@ -77,6 +80,7 @@ exports.updateOne = async function (
   const result = await publisherEntity.updateOne();
   res.json({
     isSuccess: true,
+    message: "Publisher ubdated",
     result: result,
   });
 };

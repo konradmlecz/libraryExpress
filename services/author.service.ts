@@ -9,6 +9,7 @@ exports.getAllAuthor = async function (
   const authorItems = await AuthorEntity.getAll();
   res.status(200).json({
     isSuccess: true,
+    message: "List of Authors",
     authorItems,
   });
 };
@@ -31,6 +32,7 @@ exports.insertOneAuthor = async function (
   const id = await publisherEntity.insertOne();
   res.json({
     isSuccess: true,
+    message: "Author added",
     id: id,
   });
 };
@@ -55,6 +57,7 @@ exports.getOneAuthor = async function (
   const [result] = await AuthorEntity.getOneById(id);
   res.json({
     isSuccess: true,
+    message: "Author..",
     result: result,
   });
 };
@@ -87,6 +90,7 @@ exports.updateOneAuthor = async function (
   const result = await authorEntity.updateOne();
   res.json({
     isSuccess: true,
+    message: "Author ubdated...",
     result: result,
   });
 };

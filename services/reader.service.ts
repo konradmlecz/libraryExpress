@@ -27,6 +27,7 @@ exports.getOneReader = async function (
 
   res.json({
     isSuccess: true,
+    message: "Reader data..",
     result: result,
   });
 };
@@ -58,10 +59,10 @@ exports.updateOneReader = async function (
     phone: phone,
     id: id,
   });
-  const result = await readerEntity.updateOne();
+  await readerEntity.updateOne();
   res.json({
     isSuccess: true,
-    result: result,
+    message: "Reader data is ubdated",
   });
 };
 
@@ -139,6 +140,7 @@ exports.getlendBooks = async function (
 
   res.status(200).json({
     isSuccess: true,
+    message: "List books...",
     result,
   });
 };
@@ -170,6 +172,7 @@ exports.signUp = async function (req: express.Request, res: express.Response) {
 
   res.status(201).json({
     isSuccess: true,
+    message: "Reader is created",
     id: id,
   });
 };
@@ -194,6 +197,7 @@ exports.loginIn = async function (req: express.Request, res: express.Response) {
   );
   res.json({
     isSuccess: true,
+    message: "Reader is login",
     token,
   });
 };
