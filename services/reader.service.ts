@@ -15,7 +15,6 @@ exports.getOneReader = async function (
   const validator = await ReaderValidator.checkForGeteOne({
     id: id,
   });
-  console.log(validator);
 
   if (validator.error) {
     return res.status(400).json({

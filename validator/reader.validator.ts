@@ -54,8 +54,6 @@ export class ReaderValidator {
   }
 
   setEntity(entity: null | ReaderEntity) {
-    console.log(this, "s");
-
     this.entity = entity;
   }
 
@@ -124,7 +122,6 @@ export class ReaderValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const reader = new this(data);
     reader.validator.isNotBeEmpty(reader.id, "id");
-    console.log(reader.setEntity, "s");
     await reader.validator.readerMustBeExist(reader.id, reader);
 
     return reader;
