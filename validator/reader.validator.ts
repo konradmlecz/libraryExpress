@@ -78,7 +78,7 @@ export class ReaderValidator {
 
   isAuthenticated() {
     let passwordIsCorrect = false;
-    if (this.entity.password || this.password) {
+    if (this.entity.password && this.password) {
       passwordIsCorrect = bcrypt.compareSync(
         this.password,
         this.entity.password
@@ -103,7 +103,6 @@ export class ReaderValidator {
     reader.validator.isNotBeEmpty(reader.email, "email");
     if (!reader.email) reader.email = "";
     await reader.withEmailMustBeExist();
-
     if (reader.entity) {
       reader.isAuthenticated();
     }
