@@ -13,7 +13,7 @@ exports.authenticationReader = async function (
     authHeader,
     process.env.sk,
     { algorithm: "RS256" },
-    function (err: any, decoded: any) {
+    function (err: express.ErrorRequestHandler, decoded: string) {
       if (err) {
         return res.status(403).json({
           massage: "authentication failed",

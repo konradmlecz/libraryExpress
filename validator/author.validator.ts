@@ -37,7 +37,7 @@ export class AuthorValidator {
     this.validator = new MainValidator();
   }
 
-  setEnity(entity: null | AuthorEntity) {
+  setEntity(entity: null | AuthorEntity) {
     this.entity = entity;
   }
 
@@ -53,7 +53,7 @@ export class AuthorValidator {
   static async checkForUbdateOne(data: PropsUbdate) {
     const author = new this(data);
     author.validator.isNotBeEmpty(author.id, "id");
-    await author.validator.authorMustBeExist(author.id, author.setEnity);
+    await author.validator.authorMustBeExist(author.id, author);
 
     author.validator.isNotBeEmpty(author.name, "name");
     author.validator.isNotBeEmpty(author.surname, "surname");
@@ -64,7 +64,7 @@ export class AuthorValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const author = new this(data);
     author.validator.isNotBeEmpty(author.id, "id");
-    await author.validator.authorMustBeExist(author.id, author.setEnity);
+    await author.validator.authorMustBeExist(author.id, author);
     return author;
   }
 }

@@ -12,9 +12,10 @@ exports.getOneReader = async function (
 ) {
   const { id } = res.locals.reader;
 
-  const { validator } = await ReaderValidator.checkForGeteOne({
+  const validator = await ReaderValidator.checkForGeteOne({
     id: id,
   });
+  console.log(validator);
 
   if (validator.error) {
     return res.status(400).json({
@@ -192,7 +193,7 @@ exports.loginIn = async function (req: express.Request, res: express.Response) {
   const token = jwt.sign(
     { email: email, id: entity.id },
     process.env.sk,
-    { expiresIn: "1h" },
+    { expiresIn: "6h" },
     { algorithm: "RS256" }
   );
   res.json({

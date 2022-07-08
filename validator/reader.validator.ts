@@ -53,7 +53,9 @@ export class ReaderValidator {
     this.entity = null;
   }
 
-  setEnity(entity: null | ReaderEntity) {
+  setEntity(entity: null | ReaderEntity) {
+    console.log(this, "s");
+
     this.entity = entity;
   }
 
@@ -123,14 +125,16 @@ export class ReaderValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const reader = new this(data);
     reader.validator.isNotBeEmpty(reader.id, "id");
-    await reader.validator.readerMustBeExist(reader.id, reader.setEnity);
+    console.log(reader.setEntity, "s");
+    await reader.validator.readerMustBeExist(reader.id, reader);
+
     return reader;
   }
 
   static async checkForUbdateOne(data: PropsUbdate) {
     const reader = new this(data);
     reader.validator.isNotBeEmpty(reader.id, "id");
-    await reader.validator.readerMustBeExist(reader.id, reader.setEnity);
+    await reader.validator.readerMustBeExist(reader.id, reader);
 
     reader.validator.isNotBeEmpty(reader.name, "name");
     reader.validator.isNotBeEmpty(reader.surname, "surname");
