@@ -39,7 +39,7 @@ export class BookValidator {
     this.entity = null;
   }
 
-  setEnity(entity: null | BookEntity) {
+  setEntity(entity: null | BookEntity) {
     this.entity = entity;
   }
 
@@ -62,7 +62,7 @@ export class BookValidator {
   static async checkForGetOne(data: PropsGetOne) {
     const book = new this(data);
     book.validator.isNotBeEmpty(book.id, "id");
-    await book.validator.bookMustBeExist(book.id, book.setEnity);
+    await book.validator.bookMustBeExist(book.id, book);
     return book;
   }
 }

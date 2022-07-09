@@ -53,7 +53,7 @@ export class ReaderValidator {
     this.entity = null;
   }
 
-  setEnity(entity: null | ReaderEntity) {
+  setEntity(entity: null | ReaderEntity) {
     this.entity = entity;
   }
 
@@ -76,7 +76,7 @@ export class ReaderValidator {
 
   isAuthenticated() {
     let passwordIsCorrect = false;
-    if (this.entity.password || this.password) {
+    if (this.entity.password && this.password) {
       passwordIsCorrect = bcrypt.compareSync(
         this.password,
         this.entity.password
@@ -101,7 +101,6 @@ export class ReaderValidator {
     reader.validator.isNotBeEmpty(reader.email, "email");
     if (!reader.email) reader.email = "";
     await reader.withEmailMustBeExist();
-
     if (reader.entity) {
       reader.isAuthenticated();
     }
@@ -123,14 +122,15 @@ export class ReaderValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const reader = new this(data);
     reader.validator.isNotBeEmpty(reader.id, "id");
-    await reader.validator.readerMustBeExist(reader.id, reader.setEnity);
+    await reader.validator.readerMustBeExist(reader.id, reader);
+
     return reader;
   }
 
   static async checkForUbdateOne(data: PropsUbdate) {
     const reader = new this(data);
     reader.validator.isNotBeEmpty(reader.id, "id");
-    await reader.validator.readerMustBeExist(reader.id, reader.setEnity);
+    await reader.validator.readerMustBeExist(reader.id, reader);
 
     reader.validator.isNotBeEmpty(reader.name, "name");
     reader.validator.isNotBeEmpty(reader.surname, "surname");

@@ -31,7 +31,7 @@ export class PublisherValidator {
     this.entity = null;
   }
 
-  setEnity(entity: null | typeof PublisherEntity) {
+  setEntity(entity: null | typeof PublisherEntity) {
     this.entity = entity;
   }
 
@@ -46,10 +46,7 @@ export class PublisherValidator {
   static async checkForUbdateOne(data: PropsUbdate) {
     const publisher = new this(data);
     publisher.validator.isNotBeEmpty(publisher.id, "id");
-    await publisher.validator.authorMustBeExist(
-      publisher.id,
-      publisher.setEnity
-    );
+    await publisher.validator.publisherMustBeExist(publisher.id, publisher);
     publisher.validator.isNotBeEmpty(publisher.name, "name");
 
     return publisher;
@@ -58,10 +55,7 @@ export class PublisherValidator {
   static async checkForGeteOne(data: PropsGetOne) {
     const publisher = new this(data);
     publisher.validator.isNotBeEmpty(publisher.id, "id");
-    await publisher.validator.authorMustBeExist(
-      publisher.id,
-      publisher.setEnity
-    );
+    await publisher.validator.publisherMustBeExist(publisher.id, publisher);
     return publisher;
   }
 }
