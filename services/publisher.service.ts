@@ -22,7 +22,6 @@ exports.insertOne = async function (
   if (validator.error) {
     return res.status(400).json({
       isSuccess: false,
-      message: "Publisher added",
       resultValidation: validator.resultValidation,
     });
   }
@@ -30,6 +29,7 @@ exports.insertOne = async function (
   const id = await publisherEntity.insertOne();
   res.json({
     isSuccess: true,
+    message: "Publisher added",
     id: id,
   });
 };
